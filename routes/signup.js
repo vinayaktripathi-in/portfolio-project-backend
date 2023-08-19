@@ -9,7 +9,7 @@ const client = new MongoClient(uri, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 });
-
+// HI
 router.post("/", async (req, res) => {
   const { email, password, phone } = req.body;
 
