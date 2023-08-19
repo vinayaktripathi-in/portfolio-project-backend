@@ -18,7 +18,7 @@ router.post("/", async (req, res) => {
 
   try {
     await client.connect();
-    const db = client.db(); // Replace with your actual database name
+    const db = client.db("portfolio-project"); // Replace with your actual database name
     const usersCollection = db.collection("users");
     // Connecting to MongoDB Atlas
 
