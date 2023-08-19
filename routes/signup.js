@@ -15,7 +15,7 @@ router.post("/", async (req, res) => {
 
   try {
     await client.connect();
-    const db = client.db(); // No need to provide database name here
+    const db = client.db("portfolio-project"); // No need to provide database name here
     const usersCollection = db.collection("users");
 
     // Hash the password before storing it
