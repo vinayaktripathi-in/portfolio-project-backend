@@ -1,14 +1,14 @@
 require("dotenv").config();
 const express = require("express");
-// const cors = require('cors');
+const cors = require('cors');
 const app = express();
 
 // Allow requests from your frontend domain
-// app.use(cors({
-//   origin: 'http://localhost:3000', // Adjust to your frontend URL
-//   methods: 'GET, POST, PUT, DELETE', // Adjust the allowed HTTP methods
-//   credentials: true, // Allow sending cookies and other credentials
-// }));
+app.use(cors({
+  origin: 'http://localhost:3000', // Adjust to your frontend URL
+  methods: 'GET, POST, PUT, DELETE', // Adjust the allowed HTTP methods
+  credentials: true, // Allow sending cookies and other credentials
+}));
 
 // Middleware
 app.use(express.json());
