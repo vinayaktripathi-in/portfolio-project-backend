@@ -41,6 +41,7 @@ router.post("/", async (req, res) => {
       expiresIn: "1h",
     });
 
+    // Including user information in response
     const userData = {
       _id: user._id,
       firstName: user.firstName,
