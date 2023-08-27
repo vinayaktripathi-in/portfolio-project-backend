@@ -11,7 +11,7 @@ const client = new MongoClient(uri, {
 });
 // HI
 router.post("/", async (req, res) => {
-  const { email, password, phone } = req.body;
+  const {firstName, lastName, email, password, phone } = req.body;
 
   try {
     await client.connect();
@@ -23,6 +23,8 @@ router.post("/", async (req, res) => {
 
     // Insert the user document
     const result = await usersCollection.insertOne({
+      firstName: firstName,
+      firstName: lastName,
       email: email,
       password: hashedPassword,
       phone: phone,
