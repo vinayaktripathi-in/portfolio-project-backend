@@ -24,7 +24,7 @@ router.post("/", async (req, res) => {
     // Insert the user document
     const result = await usersCollection.insertOne({
       firstName: firstName,
-      firstName: lastName,
+      lastName: lastName,
       email: email,
       password: hashedPassword,
       phone: phone,
