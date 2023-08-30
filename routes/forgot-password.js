@@ -43,18 +43,18 @@ router.post("/", async (req, res) => {
     // Save the temporary secret in the user's document
     await usersCollection.updateOne(
       { email },
-      { $set: { otp: tempSecret.ascii } }
+      { $set: { otpSecret: tempSecret.base32 } }
     );
 
     // Generate OTP
     const otp = speakeasy.totp({
-      secret: tempSecret.ascii,
+      secret: tempSecret.base32, // Use base32 secret for OTP generation
       encoding: "base32",
     });
 
     // Send OTP to user's email
     const mailOptions = {
-      from: process.env.EMAIL,
+      from: "admin@vinayaktripathi.in",
       to: email,
       subject: "OTP for Password Reset",
       text: `Your OTP for password reset is: ${otp}`,
@@ -63,7 +63,11 @@ router.post("/", async (req, res) => {
     transporter.sendMail(mailOptions, (error, info) => {
       if (error) {
         console.log("Error sending email:", error);
-        res.status(500).json({ message: "Error sending OTP email" });
+        res
+          .status(500)
+          .json({
+            message: `Error sending OTP email, so here is your OTP: ${otp}`,
+          });
       } else {
         console.log("Email sent:", info.response);
         res.json({ message: "OTP sent to your email" });

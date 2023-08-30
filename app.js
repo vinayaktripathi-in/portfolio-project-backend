@@ -18,12 +18,14 @@ app.use(express.urlencoded({ extended: true }));
 const signinRoute = require("./routes/signin");
 const signupRoute = require("./routes/signup");
 const forgotpasswordRoute = require("./routes/forgot-password");
+const verifyRoute = require("./routes/verify");
 const contactRoute = require("./routes/contact");
 
 // Use route handlers
 app.use("/signin", signinRoute);
 app.use("/signup", signupRoute);
 app.use("/forgot-password", forgotpasswordRoute);
+app.use("/verify", verifyRoute);
 app.use("/contact", contactRoute);
 
 // Start the server
