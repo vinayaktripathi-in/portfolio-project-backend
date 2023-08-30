@@ -56,8 +56,6 @@ router.post("/", async (req, res) => {
       { $set: { otpSecret: tempSecret.base32 } }
     );
 
-    console.log("Secret: ", tempSecret.base32);
-
     // Send OTP to user's email
     const mailOptions = {
       from: "admin@vinayaktripathi.in",
@@ -74,7 +72,7 @@ router.post("/", async (req, res) => {
         });
       } else {
         console.log("Email sent:", info.response);
-        res.json({ message: "OTP sent to your email" });
+        res.json({ message: "OTP sent to your email", otp: otp });
       }
     });
 
