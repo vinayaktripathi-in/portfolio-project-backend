@@ -26,6 +26,11 @@ const transporter = nodemailer.createTransport({
   },
 });
 
+transporter
+  .verify()
+  .then(() => console.log("Connected to email server"))
+  .catch((error) => console.log("Unable to connect to email server."));
+
 router.post("/", async (req, res) => {
   const { email } = req.body;
 
