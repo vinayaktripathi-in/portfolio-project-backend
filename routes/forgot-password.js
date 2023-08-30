@@ -43,7 +43,7 @@ router.post("/", async (req, res) => {
     // Save the temporary secret in the user's document
     await usersCollection.updateOne(
       { email },
-      { $set: { tempSecret: tempSecret.ascii } }
+      { $set: { otp: tempSecret.ascii } }
     );
 
     // Generate OTP
