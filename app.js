@@ -15,19 +15,19 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 // Import route files
-const signinRoute = require("./routes/signin");
-const signupRoute = require("./routes/signup");
-const forgotpasswordRoute = require("./routes/forgot-password");
+const signInRoute = require("./routes/signin");
+const signUpRoute = require("./routes/signup");
+const forgotPasswordRoute = require("./routes/forgot-password");
 const verifyRoute = require("./routes/verify");
-const createnewpasswordRoute = require("./routes/create-new-password");
+const createPasswordRoute = require("./routes/create-password");
 const contactRoute = require("./routes/contact");
 
 // Use route handlers
-app.use("/signin", signinRoute);
-app.use("/signup", signupRoute);
-app.use("/forgot-password", forgotpasswordRoute);
+app.use("/signin", signInRoute);
+app.use("/signup", signUpRoute);
+app.use("/forgot-password", forgotPasswordRoute);
 app.use("/verify", verifyRoute);
-app.use("/create-new-password", createnewpasswordRoute);
+app.use("/create-password", createPasswordRoute);
 app.use("/contact", contactRoute);
 
 // Start the server
