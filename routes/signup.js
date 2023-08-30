@@ -1,28 +1,32 @@
 const express = require("express");
 const bcrypt = require("bcrypt");
 const { MongoClient } = require("mongodb");
+const { v4: uuidv4 } = require("uuid"); // For generating UUIDs
 
 const router = express.Router();
+const uri = process.env.MONGODB_URI;
 
-const uri = process.env.MONGODB_URI; // Replace with your actual local database name
 const client = new MongoClient(uri, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 });
-// HI
+
 router.post("/", async (req, res) => {
-  const {firstName, lastName, email, password, phone } = req.body;
+  const { firstName, lastName, email, password, phone } = req.body;
 
   try {
     await client.connect();
-    const db = client.db("portfolio-project"); // No need to provide database name here
+    const db = client.db("portfolio-project");
     const usersCollection = db.collection("users");
 
     // Hash the password before storing it
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    // Insert the user document
+    const userId = uuidv4(); // Generate a unique user ID
+
+    // Insert the user document with the generated user ID
     const result = await usersCollection.insertOne({
+      userId: userId,
       firstName: firstName,
       lastName: lastName,
       email: email,
@@ -31,7 +35,7 @@ router.post("/", async (req, res) => {
     });
 
     console.log("User inserted:", result.insertedId);
-    res.json({ message: "User registered successfully" });
+    res.json({ message: "User registered successfully", userId: userId });
 
     client.close();
   } catch (error) {
