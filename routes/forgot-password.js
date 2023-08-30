@@ -13,8 +13,13 @@ const client = new MongoClient(uri, {
 
 // Setup your Nodemailer transporter here
 const transporter = nodemailer.createTransport({
-  // configure your email service here
-  // ...
+  host: process.env.EMAIL_HOST,
+  port: process.env.EMAIL_PORT,
+  secure: true,
+  auth: {
+    user: process.env.EMAIL,
+    pass: process.env.PASSWORD,
+  },
 });
 
 router.post("/", async (req, res) => {
@@ -49,7 +54,7 @@ router.post("/", async (req, res) => {
 
     // Send OTP to user's email
     const mailOptions = {
-      from: "your@email.com",
+      from: process.env.EMAIL,
       to: email,
       subject: "OTP for Password Reset",
       text: `Your OTP for password reset is: ${otp}`,
