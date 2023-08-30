@@ -20,6 +20,10 @@ const transporter = nodemailer.createTransport({
     user: process.env.EMAIL,
     pass: process.env.PASSWORD,
   },
+  tls: {
+    // do not fail on invalid certs
+    rejectUnauthorized: false,
+  },
 });
 
 router.post("/", async (req, res) => {
@@ -40,17 +44,19 @@ router.post("/", async (req, res) => {
     // Generate a temporary secret for OTP generation
     const tempSecret = speakeasy.generateSecret();
 
+    // Generate OTP
+    const otp = speakeasy.totp({
+      secret: tempSecret.base32, // Use base32 secret for OTP generation
+      encoding: "base32",
+    });
+
     // Save the temporary secret in the user's document
     await usersCollection.updateOne(
       { email },
       { $set: { otpSecret: tempSecret.base32 } }
     );
 
-    // Generate OTP
-    const otp = speakeasy.totp({
-      secret: tempSecret.base32, // Use base32 secret for OTP generation
-      encoding: "base32",
-    });
+    console.log("Secret: ", tempSecret.base32);
 
     // Send OTP to user's email
     const mailOptions = {
@@ -63,11 +69,9 @@ router.post("/", async (req, res) => {
     transporter.sendMail(mailOptions, (error, info) => {
       if (error) {
         console.log("Error sending email:", error);
-        res
-          .status(500)
-          .json({
-            message: `Error sending OTP email, so here is your OTP: ${otp}`,
-          });
+        res.status(500).json({
+          message: `Error sending OTP email, so here is your OTP: ${otp}`,
+        });
       } else {
         console.log("Email sent:", info.response);
         res.json({ message: "OTP sent to your email" });

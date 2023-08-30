@@ -35,6 +35,7 @@ router.post("/", async (req, res) => {
       secret: user.otpSecret, // Use the stored secret for verification
       encoding: "base32",
       token: otp,
+      window: 240
     });
 
     if (!verified) {
