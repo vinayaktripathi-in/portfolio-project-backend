@@ -68,7 +68,8 @@ router.post("/", async (req, res) => {
       if (error) {
         console.log("Error sending email:", error);
         res.status(500).json({
-          message: `Error sending OTP email, so here is your OTP: ${otp}`,
+          message: "Error sending OTP email",
+          otp: otp,
         });
       } else {
         console.log("Email sent:", info.response);
