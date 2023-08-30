@@ -44,7 +44,7 @@ router.post("/", async (req, res) => {
     }
 
     // Clear the temporary secret after successful verification
-    await usersCollection.updateOne({ email }, { $unset: { tempSecret: "" } });
+    await usersCollection.updateOne({ email }, { $unset: { otpSecret: "" } });
 
     res.json({ message: "OTP verified successfully" });
 
