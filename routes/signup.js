@@ -19,6 +19,11 @@ router.post("/", async (req, res) => {
     const db = client.db("portfolio-project");
     const usersCollection = db.collection("users");
 
+    if (user) {
+      res.status(201).json({ message: "User is already registered" });
+      return;
+    }
+
     // Hash the password before storing it
     const hashedPassword = await bcrypt.hash(password, 10);
 
