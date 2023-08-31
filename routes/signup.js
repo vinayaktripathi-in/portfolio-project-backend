@@ -19,6 +19,8 @@ router.post("/", async (req, res) => {
     const db = client.db("portfolio-project");
     const usersCollection = db.collection("users");
 
+    const user = await usersCollection.findOne({ email });
+
     if (user) {
       res.status(201).json({ message: "User is already registered" });
       return;
