@@ -16,6 +16,7 @@ const transporter = nodemailer.createTransport({
   host: process.env.EMAIL_HOST,
   port: process.env.EMAIL_PORT,
   secure: true,
+  debug: true,
   auth: {
     user: process.env.EMAIL,
     pass: process.env.PASSWORD,
@@ -29,7 +30,7 @@ const transporter = nodemailer.createTransport({
 transporter
   .verify()
   .then(() => console.log("Connected to email server"))
-  .catch((error) => console.log("Unable to connect to email server."));
+  .catch((error) => console.log(error));
 
 router.post("/", async (req, res) => {
   const { email } = req.body;
