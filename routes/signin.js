@@ -43,7 +43,7 @@ router.post("/", async (req, res) => {
 
     // Including user information in response
     const userData = {
-      _id: user._id,
+      userId: user.userId,
       firstName: user.firstName,
       lastName: user.lastName,
       email: user.email,
