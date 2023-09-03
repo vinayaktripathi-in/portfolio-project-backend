@@ -15,20 +15,28 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 // Import route files
+// POST API
 const signInRoute = require("./routes/signin");
 const signUpRoute = require("./routes/signup");
-const forgotPasswordRoute = require("./routes/forgot-password");
 const verifyRoute = require("./routes/verify");
-const createPasswordRoute = require("./routes/create-password");
 const contactRoute = require("./routes/contact");
+const forgotPasswordRoute = require("./routes/forgot-password");
+const createPasswordRoute = require("./routes/create-password");
+
+// GET API
+const userDataRoute = require("./routes/user-data");
 
 // Use route handlers
+// POST API
 app.use("/signin", signInRoute);
 app.use("/signup", signUpRoute);
-app.use("/forgot-password", forgotPasswordRoute);
 app.use("/verify", verifyRoute);
-app.use("/create-password", createPasswordRoute);
 app.use("/contact", contactRoute);
+app.use("/forgot-password", forgotPasswordRoute);
+app.use("/create-password", createPasswordRoute);
+
+// GET API
+app.use("/user-data", userDataRoute);
 
 // Start the server
 const port = process.env.PORT || 4000;
