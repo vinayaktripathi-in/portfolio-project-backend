@@ -13,7 +13,9 @@ router.get("/", async (req, res) => {
   const token = req.header("x-auth-token"); // Get the token from the request header
 
   if (!token) {
-    return res.status(401).json({ message: "Access denied. No token provided." });
+    return res
+      .status(401)
+      .json({ message: "Access denied. No token provided." });
   }
 
   try {
@@ -42,14 +44,12 @@ router.get("/", async (req, res) => {
         email: user.email,
         phone: user.phone,
       };
-
       res.json(userData);
+      client.close();
     });
   } catch (error) {
     console.error("Error connecting to MongoDB Atlas:", error);
     res.status(500).json({ message: "Internal server error" });
-  } finally {
-    client.close();
   }
 });
 
