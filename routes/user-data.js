@@ -1,5 +1,5 @@
 const express = require("express");
-const { MongoClient } = require("mongodb");
+const { MongoClient, ObjectId } = require("mongodb");
 const jwt = require("jsonwebtoken");
 
 const router = express.Router();
@@ -24,13 +24,15 @@ router.get("/", async (req, res) => {
     const usersCollection = db.collection("users");
 
     // Verify the JWT token
-    jwt.verify(token, "your-secret-key", async (err, decoded) => {
+    jwt.verify(token, "XXR", async (err, decoded) => {
       if (err) {
         return res.status(401).json({ message: "Invalid token" });
       }
 
-      const userId = decoded.userId;
-      const user = await usersCollection.findOne({ _id: userId });
+      const userId = decoded.userId; // userId is a string
+      const objectIdUserId = new ObjectId(userId); // Convert it to ObjectId
+
+      const user = await usersCollection.findOne({ _id: objectIdUserId });
 
       if (!user) {
         return res.status(401).json({ message: "User not found" });
