@@ -64,7 +64,7 @@ router.post("/", async (req, res) => {
 
     // Send OTP to user's email
     const mailOptions = {
-      from: "admin@vinayaktripathi.in",
+      from: process.env.EMAIL,
       to: email,
       subject: "OTP for Password Reset",
       text: `Your OTP for password reset is: ${otp}`,
