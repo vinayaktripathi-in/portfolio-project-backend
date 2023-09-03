@@ -42,7 +42,7 @@ router.post("/", async (req, res) => {
     });
 
     console.log("User inserted:", result.insertedId);
-    res.json({ message: "User registered successfully", userId: userId });
+    res.status(200).json({ message: "User registered successfully", userId: userId });
 
     client.close();
   } catch (error) {
