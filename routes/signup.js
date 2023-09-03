@@ -22,7 +22,7 @@ router.post("/", async (req, res) => {
     const user = await usersCollection.findOne({ email });
 
     if (user) {
-      res.status(201).json({ message: "User is already registered" });
+      res.status(409).json({ message: "User is already registered" });
       return;
     }
 
