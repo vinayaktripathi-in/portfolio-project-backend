@@ -1,6 +1,5 @@
 const express = require("express");
-const { MongoClient } = require("mongodb");
-const { v4: uuidv4 } = require("uuid");
+const { MongoClient, ObjectId  } = require("mongodb");
 const bodyParser = require("body-parser");
 
 const router = express.Router();
@@ -13,16 +12,18 @@ const client = new MongoClient(uri, {
 
 router.use(bodyParser.json());
 
-router.delete("/blogs/:blogId", async (req, res) => {
+router.delete("/:blogId", async (req, res) => {
   const { blogId } = req.params;
 
   try {
     await client.connect();
     const db = client.db("portfolio-project");
     const blogsCollection = db.collection("blogs");
+    
+    const objectId = new ObjectId(blogId);
 
     // Delete the blog by its ID
-    const result = await blogsCollection.deleteOne({ _id: ObjectId(blogId) });
+    const result = await blogsCollection.deleteOne({ _id: objectId });
 
     if (result.deletedCount === 0) {
       res.status(404).json({ message: "Blog not found" });

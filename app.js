@@ -20,7 +20,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 // Import route files
-// POST API
+// POST Auth API
 const signInRoute = require("./routes/signin");
 const signUpRoute = require("./routes/signup");
 const contactRoute = require("./routes/contact");
@@ -29,6 +29,18 @@ const emailVerifyRoute = require("./routes/email-verify");
 const phoneVerifyRoute = require("./routes/phone-verify");
 const forgotPasswordRoute = require("./routes/forgot-password");
 const createPasswordRoute = require("./routes/create-password");
+
+// Blog API's
+const createBlogRoute = require("./routes/create-blog");
+const getAllBlogRoute = require("./routes/get-all-blogs");
+const getBlogRoute = require("./routes/get-blog");
+const deleteBlogRoute = require("./routes/delete-blog");
+const updateBlogRoute = require("./routes/update-blog");
+app.use("/create-blog", createBlogRoute);
+app.use("/get-all-blogs", getAllBlogRoute);
+app.use("/get-blog", getBlogRoute);
+app.use("/delete-blog", deleteBlogRoute);
+app.use("/update-blog", updateBlogRoute);
 
 // GET API
 const userDataRoute = require("./routes/user-data");

@@ -1,6 +1,5 @@
 const express = require("express");
-const { MongoClient } = require("mongodb");
-const { v4: uuidv4 } = require("uuid");
+const { MongoClient, ObjectId } = require("mongodb");
 const bodyParser = require("body-parser");
 
 const router = express.Router();
@@ -13,7 +12,7 @@ const client = new MongoClient(uri, {
 
 router.use(bodyParser.json());
 
-router.put("/blogs/:blogId", async (req, res) => {
+router.put("/:blogId", async (req, res) => {
   const { blogId } = req.params;
   const { title, content } = req.body;
 
@@ -22,9 +21,11 @@ router.put("/blogs/:blogId", async (req, res) => {
     const db = client.db("portfolio-project");
     const blogsCollection = db.collection("blogs");
 
+    const objectId = new ObjectId(blogId);
+
     // Update the blog by its ID
     const result = await blogsCollection.updateOne(
-      { _id: ObjectId(blogId) },
+      { _id: objectId },
       { $set: { title: title, content: content } }
     );
 

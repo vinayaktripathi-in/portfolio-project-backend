@@ -13,8 +13,8 @@ const client = new MongoClient(uri, {
 
 router.use(bodyParser.json());
 
-router.post("/blogs", async (req, res) => {
-  const { title, content, userEmail } = req.body; // userEmail is used to identify the user
+router.post("/", async (req, res) => {
+  const { title, content, email } = req.body; // userEmail is used to identify the user
 
   try {
     await client.connect();
@@ -23,7 +23,7 @@ router.post("/blogs", async (req, res) => {
     const usersCollection = db.collection("users");
 
     // Find the user based on their email
-    const user = await usersCollection.findOne({ email: userEmail });
+    const user = await usersCollection.findOne({ email: email });
 
     if (!user) {
       res.status(404).json({ message: "User not found" });
@@ -39,6 +39,7 @@ router.post("/blogs", async (req, res) => {
       title: title,
       content: content,
       author: `${user.firstName} ${user.lastName}`,
+      email: `${user.email}`,
       createdAt: new Date(),
     });
 

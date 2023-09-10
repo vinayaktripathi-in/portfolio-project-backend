@@ -1,6 +1,5 @@
 const express = require("express");
-const { MongoClient } = require("mongodb");
-const { v4: uuidv4 } = require("uuid");
+const { MongoClient, ObjectId } = require("mongodb");
 const bodyParser = require("body-parser");
 
 const router = express.Router();
@@ -13,7 +12,7 @@ const client = new MongoClient(uri, {
 
 router.use(bodyParser.json());
 
-router.get("/blogs/:blogId", async (req, res) => {
+router.get("/:blogId", async (req, res) => {
   const { blogId } = req.params;
 
   try {
@@ -21,8 +20,10 @@ router.get("/blogs/:blogId", async (req, res) => {
     const db = client.db("portfolio-project");
     const blogsCollection = db.collection("blogs");
 
+    const objectId = new ObjectId(blogId);
+
     // Find the blog by its ID
-    const blog = await blogsCollection.findOne({ _id: ObjectId(blogId) });
+    const blog = await blogsCollection.findOne({ _id: objectId });
 
     if (!blog) {
       res.status(404).json({ message: "Blog not found" });
