@@ -18,8 +18,10 @@ app.use(express.urlencoded({ extended: true }));
 // POST API
 const signInRoute = require("./routes/signin");
 const signUpRoute = require("./routes/signup");
-const verifyRoute = require("./routes/verify");
 const contactRoute = require("./routes/contact");
+const OTPVerifyRoute = require("./routes/otp-verify");
+const emailVerifyRoute = require("./routes/email-verify");
+const phoneVerifyRoute = require("./routes/phone-verify");
 const forgotPasswordRoute = require("./routes/forgot-password");
 const createPasswordRoute = require("./routes/create-password");
 
@@ -30,8 +32,10 @@ const userDataRoute = require("./routes/user-data");
 // POST API
 app.use("/signin", signInRoute);
 app.use("/signup", signUpRoute);
-app.use("/verify", verifyRoute);
 app.use("/contact", contactRoute);
+app.use("/otp-verify", OTPVerifyRoute);
+app.use("/email-verify", emailVerifyRoute);
+app.use("/phone-verify", phoneVerifyRoute);
 app.use("/forgot-password", forgotPasswordRoute);
 app.use("/create-password", createPasswordRoute);
 
