@@ -29,7 +29,7 @@ const transporter = nodemailer.createTransport({
 });
 
 router.post("/", async (req, res) => {
-  const { firstName, lastName, email, password, phone } = req.body;
+  const { firstName, lastName, email, password, phone, isEmailVerified } = req.body;
 
   try {
     await client.connect();
@@ -56,6 +56,7 @@ router.post("/", async (req, res) => {
       email: email,
       password: hashedPassword,
       phone: phone,
+      isEmailVerified: false,
     });
 
     console.log("User inserted:", result.insertedId);
