@@ -24,7 +24,6 @@ app.use(express.urlencoded({ extended: true }));
 // POST Auth API
 const signInRoute = require("./pages/api/auth/signin");
 const signUpRoute = require("./pages/api/auth/signup");
-const contactRoute = require("./pages/api/contact");
 const OTPVerifyRoute = require("./pages/api/auth/otp-verify");
 const emailVerifyRoute = require("./pages/api/auth/email-verify");
 const phoneVerifyRoute = require("./pages/api/auth/phone-verify");
@@ -43,8 +42,9 @@ app.use("/get-blog", getBlogRoute);
 app.use("/delete-blog", deleteBlogRoute);
 app.use("/update-blog", updateBlogRoute);
 
-// GET API
-const userDataRoute = require("./pages/api/auth/user-data");
+// Other API
+const userDataRoute = require("./pages/api/user-data");
+const contactRoute = require("./pages/api/contact");
 
 // Use route handlers
 // POST API
