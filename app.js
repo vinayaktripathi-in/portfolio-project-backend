@@ -22,21 +22,21 @@ app.use(express.urlencoded({ extended: true }));
 
 // Import route files
 // POST Auth API
-const signInRoute = require("./routes/signin");
-const signUpRoute = require("./routes/signup");
-const contactRoute = require("./routes/contact");
-const OTPVerifyRoute = require("./routes/otp-verify");
-const emailVerifyRoute = require("./routes/email-verify");
-const phoneVerifyRoute = require("./routes/phone-verify");
-const forgotPasswordRoute = require("./routes/forgot-password");
-const createPasswordRoute = require("./routes/create-password");
+const signInRoute = require("./pages/api/auth/signin");
+const signUpRoute = require("./pages/api/auth/signup");
+const contactRoute = require("./pages/api/contact");
+const OTPVerifyRoute = require("./pages/api/auth/otp-verify");
+const emailVerifyRoute = require("./pages/api/auth/email-verify");
+const phoneVerifyRoute = require("./pages/api/auth/phone-verify");
+const forgotPasswordRoute = require("./pages/api/auth/forgot-password");
+const createPasswordRoute = require("./pages/api/auth/create-password");
 
 // Blog API's
-const createBlogRoute = require("./routes/create-blog");
-const getAllBlogRoute = require("./routes/get-all-blogs");
-const getBlogRoute = require("./routes/get-blog");
-const deleteBlogRoute = require("./routes/delete-blog");
-const updateBlogRoute = require("./routes/update-blog");
+const createBlogRoute = require("./pages/api/blog/create-blog");
+const getAllBlogRoute = require("./pages/api/blog/get-all-blogs");
+const getBlogRoute = require("./pages/api/blog/get-blog");
+const deleteBlogRoute = require("./pages/api/blog/delete-blog");
+const updateBlogRoute = require("./pages/api/blog/update-blog");
 app.use("/create-blog", createBlogRoute);
 app.use("/get-all-blogs", getAllBlogRoute);
 app.use("/get-blog", getBlogRoute);
@@ -44,7 +44,7 @@ app.use("/delete-blog", deleteBlogRoute);
 app.use("/update-blog", updateBlogRoute);
 
 // GET API
-const userDataRoute = require("./routes/user-data");
+const userDataRoute = require("./pages/api/auth/user-data");
 
 // Use route handlers
 // POST API
