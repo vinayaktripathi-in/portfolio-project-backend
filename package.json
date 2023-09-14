@@ -17,13 +17,13 @@
     "jsonwebtoken": "^9.0.1",
     "mongodb": "^5.7.0",
     "mongoose": "^7.5.0",
-    "node": "^18.14.0",
+    "node": "^16.20.2",
     "nodemailer": "^6.9.4",
     "speakeasy": "^2.0.0",
     "uuid": "^9.0.0"
   },
   "engines": {
-    "node": "18.14.0"
+    "node": "16.20.2"
   },
   "devDependencies": {
     "nodemon": "^3.0.1"
