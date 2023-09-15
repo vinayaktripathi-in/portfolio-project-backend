@@ -17,6 +17,7 @@
     "jsonwebtoken": "^9.0.1",
     "mongodb": "^5.7.0",
     "mongoose": "^7.5.0",
+    "multer": "^1.4.5-lts.1",
     "node": "^16.20.2",
     "nodemailer": "^6.9.4",
     "speakeasy": "^2.0.0",
