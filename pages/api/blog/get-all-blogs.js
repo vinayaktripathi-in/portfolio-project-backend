@@ -1,6 +1,7 @@
 const express = require("express");
-const { MongoClient } = require("mongodb");
+const { MongoClient, ObjectId } = require("mongodb");
 const bodyParser = require("body-parser");
+const jwt = require("jsonwebtoken"); // Import jwt library
 
 const router = express.Router();
 const uri = process.env.MONGODB_URI;
@@ -12,32 +13,41 @@ const client = new MongoClient(uri, {
 
 router.use(bodyParser.json());
 
-// ... (previously defined routes)
-
 // Get all blogs
 router.get("/", async (req, res) => {
-  const { email } = req.body;
+  const token = req.header("x-auth-token"); // Get the token from the request header
+
+  if (!token) {
+    return res
+      .status(401)
+      .json({ message: "Access denied. No token provided." });
+  }
+
   try {
     await client.connect();
     const db = client.db("portfolio-project");
     const blogsCollection = db.collection("blogs");
     const usersCollection = db.collection("users");
 
-    const user = await usersCollection.findOne({ email });
+    jwt.verify(token, "XXR", async (err, decoded) => {
+      if (err) {
+        return res.status(401).json({ message: "Invalid token" });
+      }
 
-    if (!user) {
-      res.status(401).json({ message: "User not found" });
-      return;
-    }
+      const userId = decoded.userId; // userId is a string
+      const objectIdUserId = new ObjectId(userId); // Convert it to ObjectId
 
-    // Find all blogs in the collection
-    const blogs = await blogsCollection.find().toArray();
+      const user = await usersCollection.findOne({ _id: objectIdUserId });
 
-    res.status(200).json(blogs);
+      if (!user) {
+        return res.status(401).json({ message: "User not found" });
+      }
 
-    client.close();
+      const blogs = await blogsCollection.find().toArray(); // Find all blogs in the collection
+      res.status(200).json(blogs);
+    });
   } catch (error) {
-    console.error("Error connecting to MongoDB:", error);
+    console.error("Error connecting to MongoDB Atlas:", error);
     res.status(500).json({ message: "Internal server error" });
   }
 });
