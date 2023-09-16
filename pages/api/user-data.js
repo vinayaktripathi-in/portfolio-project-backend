@@ -45,6 +45,7 @@ router.get("/", async (req, res) => {
         lastName: user.lastName,
         email: user.email,
         phone: user.phone,
+        token: user.token,
       };
       res.json(userData);
       client.close();
