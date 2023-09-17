@@ -1,5 +1,5 @@
 const express = require("express");
-const { MongoClient, ObjectId } = require("mongodb");
+const { MongoClient } = require("mongodb");
 const bodyParser = require("body-parser");
 
 const router = express.Router();
@@ -28,10 +28,8 @@ router.get("/:blogId", async (req, res) => {
     const db = client.db("portfolio-project");
     const blogsCollection = db.collection("blogs");
 
-    const objectId = new ObjectId(blogId);
-
     // Find the blog by its ID
-    const blog = await blogsCollection.findOne({ _id: objectId });
+    const blog = await blogsCollection.findOne({ blogId: blogId });
 
     if (!blog) {
       res.status(404).json({ message: "Blog not found" });
