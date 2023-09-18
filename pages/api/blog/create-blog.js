@@ -1,9 +1,10 @@
 const express = require("express");
-const { MongoClient, ObjectId } = require("mongodb"); // Import ObjectId from mongodb
+const { MongoClient, ObjectId } = require("mongodb");
+const jwt = require("jsonwebtoken");
 const { v4: uuidv4 } = require("uuid");
+const cloudinary = require("cloudinary").v2;
 const bodyParser = require("body-parser");
-const multer = require("multer");
-const jwt = require("jsonwebtoken"); // Import jwt module
+const fs = require("fs");
 
 const router = express.Router();
 const uri = process.env.MONGODB_URI;
@@ -13,27 +14,19 @@ const client = new MongoClient(uri, {
   useUnifiedTopology: true,
 });
 
-// Configure multer to store uploaded files in a specific directory
-const storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    cb(null, "uploads/"); // Create an 'uploads' directory in your project
-  },
-  filename: function (req, file, cb) {
-    const extension = file.originalname.split(".").pop();
-    const filename = `${uuidv4()}.${extension}`;
-    cb(null, filename);
-  },
-});
+// Configure Cloudinary with your credentials
 
-const upload = multer({ storage: storage });
+cloudinary.config({
+  cloud_name: "dkfmopa7c",
+  api_key: "537644632849499",
+  api_secret: "UmtcZrrKBaKgHwk6R7wYsjwVExw",
+});
 
 router.use(bodyParser.json());
 
-// Use the 'upload' middleware to handle file uploads
-router.post("/", upload.single("coverImage"), async (req, res) => {
+router.post("/", async (req, res) => {
   const token = req.header("x-auth-token");
-  const { title, content } = req.body;
-  const coverImage = req.file ? req.file.filename : null;
+  const { title, content, category, coverImage } = req.body;
 
   try {
     await client.connect();
@@ -47,7 +40,7 @@ router.post("/", upload.single("coverImage"), async (req, res) => {
         return res.status(401).json({ message: "Invalid token" });
       }
 
-      const userId = decoded.userId; // userId is a string
+      const userId = decoded.userId;
       const objectIdUserId = new ObjectId(userId);
 
       const user = await usersCollection.findOne({ _id: objectIdUserId });
@@ -57,27 +50,54 @@ router.post("/", upload.single("coverImage"), async (req, res) => {
         return;
       }
 
+      console.log(title);
+      // Upload the image to Cloudinary
+      const cloudinaryResponse = await cloudinary.uploader.upload(
+        "https://res.cloudinary.com/demo/sample.jpg",
+        {
+          folder: "blog-covers", // Optional: You can organize uploaded images into folders
+        }
+      );
+      // Check if the upload to Cloudinary was successful
+      if (!cloudinaryResponse || cloudinaryResponse.error) {
+        return res
+          .status(500)
+          .json({ message: "Error uploading image to Cloudinary" });
+      }
+
+      // Extract the public URL of the uploaded image
+      const imageUrl = cloudinaryResponse.secure_url;
+
       // Generate a unique blog ID
       const blogId = uuidv4();
 
-      // Insert the blog document with the generated blog ID, user's name as author, and cover image filename
+      // Insert the blog document with the generated blog ID, user's name as author, and cover image URL
       const result = await blogsCollection.insertOne({
         blogId: blogId,
         title: title,
         content: content,
+        category: category,
         author: `${user.firstName} ${user.lastName}`,
         email: `${user.email}`,
-        coverImage: coverImage, // Store the cover image filename
+        coverImage: imageUrl, // Store the Cloudinary image URL
         createdAt: new Date(),
       });
 
       console.log("Blog inserted:", result.insertedId);
+
+      // Clean up (delete) the temporary image file (if it was saved locally)
+      if (req.body.coverImage && req.body.coverImage.startsWith("uploads/")) {
+        fs.unlinkSync(req.body.coverImage);
+      }
+
       res.status(200).json({
         message: "Blog posted successfully",
         blogId: blogId,
       });
     });
-  }  catch (error) {
+  } catch (error) {
+    console.error("Error uploading to Cloudinary:", error);
+    res.status(500).json({ message: "Error uploading to Cloudinary" });
     console.error("Error connecting to MongoDB Atlas:", error);
     res.status(500).json({ message: "Internal server error" });
   }
