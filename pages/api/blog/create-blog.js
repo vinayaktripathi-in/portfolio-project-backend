@@ -32,9 +32,9 @@ router.post("/", upload.single("coverImage"), async (req, res) => {
   const { title, content, category } = req.body;
 
   // Check if a file was uploaded
-  if (!req.file) {
-    return res.status(400).json({ message: "No file uploaded" });
-  }
+  // if (!req.file) {
+  //   return res.status(400).json({ message: "No file uploaded" });
+  // }
 
   try {
     await client.connect();
