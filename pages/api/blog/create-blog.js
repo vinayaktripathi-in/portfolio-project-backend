@@ -4,7 +4,7 @@ const jwt = require("jsonwebtoken");
 const { v4: uuidv4 } = require("uuid");
 const cloudinary = require("cloudinary").v2;
 const bodyParser = require("body-parser");
-const fs = require("fs");
+const multer = require("multer");
 
 const router = express.Router();
 const uri = process.env.MONGODB_URI;
@@ -15,7 +15,6 @@ const client = new MongoClient(uri, {
 });
 
 // Configure Cloudinary with your credentials
-
 cloudinary.config({
   cloud_name: "dkfmopa7c",
   api_key: "537644632849499",
@@ -24,9 +23,18 @@ cloudinary.config({
 
 router.use(bodyParser.json());
 
-router.post("/", async (req, res) => {
+// Configure multer for file uploads
+const storage = multer.memoryStorage(); // Store the file as a buffer in memory
+const upload = multer({ storage: storage });
+
+router.post("/", upload.single("coverImage"), async (req, res) => {
   const token = req.header("x-auth-token");
-  const { title, content, category, coverImage } = req.body;
+  const { title, content, category } = req.body;
+
+  // Check if a file was uploaded
+  if (!req.file) {
+    return res.status(400).json({ message: "No file uploaded" });
+  }
 
   try {
     await client.connect();
@@ -50,14 +58,17 @@ router.post("/", async (req, res) => {
         return;
       }
 
-      console.log(title);
-      // Upload the image to Cloudinary
+      // Convert the image data to a base64-encoded string
+      const imageBuffer = req.file.buffer.toString("base64");
+
+      // Upload the image to Cloudinary using the base64-encoded string
       const cloudinaryResponse = await cloudinary.uploader.upload(
-        "https://res.cloudinary.com/demo/sample.jpg",
+        `data:image/jpeg;base64,${imageBuffer}`,
         {
-          folder: "blog-covers", // Optional: You can organize uploaded images into folders
+          folder: "blog-covers",
         }
       );
+
       // Check if the upload to Cloudinary was successful
       if (!cloudinaryResponse || cloudinaryResponse.error) {
         return res
@@ -81,14 +92,12 @@ router.post("/", async (req, res) => {
         email: `${user.email}`,
         coverImage: imageUrl, // Store the Cloudinary image URL
         createdAt: new Date(),
+        likes: [],
+        comments: [],
+        shares: [],
       });
 
       console.log("Blog inserted:", result.insertedId);
-
-      // Clean up (delete) the temporary image file (if it was saved locally)
-      if (req.body.coverImage && req.body.coverImage.startsWith("uploads/")) {
-        fs.unlinkSync(req.body.coverImage);
-      }
 
       res.status(200).json({
         message: "Blog posted successfully",

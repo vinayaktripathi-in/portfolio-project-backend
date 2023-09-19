@@ -17,6 +17,9 @@ const blogSchema = new mongoose.Schema({
     type: Date,
     default: Date.now,
   },
+  likes: { type: Number, default: 0 },
+  comments: [{ text: String, user: String, createdAt: Date }],
+  shares: { type: Number, default: 0 },
 });
 
 // Create and export the Blog model
