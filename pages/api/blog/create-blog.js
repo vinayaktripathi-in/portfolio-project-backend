@@ -31,11 +31,6 @@ router.post("/", upload.single("coverImage"), async (req, res) => {
   const token = req.header("x-auth-token");
   const { title, content, category } = req.body;
 
-  // Check if a file was uploaded
-  // if (!req.file) {
-  //   return res.status(400).json({ message: "No file uploaded" });
-  // }
-
   try {
     await client.connect();
     const db = client.db("portfolio-project");
@@ -58,31 +53,35 @@ router.post("/", upload.single("coverImage"), async (req, res) => {
         return;
       }
 
-      // Convert the image data to a base64-encoded string
-      const imageBuffer = req.file.buffer.toString("base64");
+      // Check if an image was provided in the request
+      let imageUrl = null;
+      if (req.file) {
+        // Convert the image data to a base64-encoded string
+        const imageBuffer = req.file.buffer.toString("base64");
 
-      // Upload the image to Cloudinary using the base64-encoded string
-      const cloudinaryResponse = await cloudinary.uploader.upload(
-        `data:image/jpeg;base64,${imageBuffer}`,
-        {
-          folder: "blog-covers",
+        // Upload the image to Cloudinary using the base64-encoded string
+        const cloudinaryResponse = await cloudinary.uploader.upload(
+          `data:image/jpeg;base64,${imageBuffer}`,
+          {
+            folder: "blog-covers",
+          }
+        );
+
+        // Check if the upload to Cloudinary was successful
+        if (!cloudinaryResponse || cloudinaryResponse.error) {
+          return res
+            .status(500)
+            .json({ message: "Error uploading image to Cloudinary" });
         }
-      );
 
-      // Check if the upload to Cloudinary was successful
-      if (!cloudinaryResponse || cloudinaryResponse.error) {
-        return res
-          .status(500)
-          .json({ message: "Error uploading image to Cloudinary" });
+        // Extract the public URL of the uploaded image
+        imageUrl = cloudinaryResponse.secure_url;
       }
-
-      // Extract the public URL of the uploaded image
-      const imageUrl = cloudinaryResponse.secure_url;
 
       // Generate a unique blog ID
       const blogId = uuidv4();
 
-      // Insert the blog document with the generated blog ID, user's name as author, and cover image URL
+      // Insert the blog document with the generated blog ID, user's name as author, and cover image URL (if provided)
       const result = await blogsCollection.insertOne({
         blogId: blogId,
         title: title,
@@ -90,7 +89,7 @@ router.post("/", upload.single("coverImage"), async (req, res) => {
         category: category,
         author: `${user.firstName} ${user.lastName}`,
         email: `${user.email}`,
-        coverImage: imageUrl, // Store the Cloudinary image URL
+        coverImage: imageUrl, // Store the Cloudinary image URL (null if no image provided)
         createdAt: new Date(),
         likes: [],
         comments: [],
