@@ -49,28 +49,40 @@ router.post("/:blogId/like", async (req, res) => {
       if (!blog) {
         return res.status(404).json({ message: "Blog not found" });
       }
+
       // Check if the blog.likes array exists and is an array before using includes
       if (!Array.isArray(blog.likes)) {
         return res.status(500).json({ message: "Invalid blog format" });
       }
+
       // Check if the user has already liked the blog
-      if (blog.likes.includes(userId)) {
-        return res
-          .status(400)
-          .json({ message: "User already liked this blog" });
+      const userIndex = blog.likes.indexOf(userId);
+
+      if (userIndex !== -1) {
+        // User has already liked the blog, so "unlike" it
+        blog.likes.splice(userIndex, 1);
+      } else {
+        // User has not liked the blog, so add their ID to the likes array
+        blog.likes.push(userId);
       }
-      // Add the user to the list of likes
-      blog.likes.push(userId);
 
       // Update the blog post with the new likes array
       await blogsCollection.updateOne(
         { blogId: blogId },
         { $set: { likes: blog.likes } }
       );
-      res.status(200).json({ message: "Blog liked successfully" });
+
+      // Respond with the number of likes
+      const numberOfLikes = blog.likes.length;
+      res
+        .status(200)
+        .json({
+          message: "Blog liked/unliked successfully",
+          likes: numberOfLikes,
+        });
     });
   } catch (error) {
-    console.error("Error liking the blog:", error);
+    console.error("Error liking/unliking the blog:", error);
     res.status(500).json({ message: "Internal server error" });
   }
 });
