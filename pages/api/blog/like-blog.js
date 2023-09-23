@@ -76,10 +76,7 @@ router.post("/:blogId/like", async (req, res) => {
       const numberOfLikes = blog.likes.length;
       res
         .status(200)
-        .json({
-          message: "Blog liked/unliked successfully",
-          likes: numberOfLikes,
-        });
+        .json(blog);
     });
   } catch (error) {
     console.error("Error liking/unliking the blog:", error);
