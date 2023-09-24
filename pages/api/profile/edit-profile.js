@@ -107,26 +107,33 @@ router.put("/:userId", upload.single("profilePic"), async (req, res) => {
       }
 
       // Update user data
-      const updateFields = {
-        firstName,
-        lastName,
-        fullName,
-        email,
-        phone,
-        isEmailVerified,
-        isPhoneVerified,
-        username,
-        profilePic: profilePic || undefined, // Set to undefined if no new pic
-        profileURL,
-        profileBio,
-        followersCount,
-        followingCount,
-        postsCount,
-        blogsCount,
-        platform,
-        lastUpdateTimestamp,
-        isVerified,
-      };
+      const allowedFields = [
+        "firstName",
+        "lastName",
+        "fullName",
+        "email",
+        "phone",
+        "isEmailVerified",
+        "isPhoneVerified",
+        "username",
+        "profilePic",
+        "profileURL",
+        "profileBio",
+        "followersCount",
+        "followingCount",
+        "postsCount",
+        "blogsCount",
+        "platform",
+        "lastUpdateTimestamp",
+        "isVerified",
+      ];
+
+      // Iterate through the allowed fields and update them if present in req.body
+      allowedFields.forEach((field) => {
+        if (req.body.hasOwnProperty(field)) {
+          updateFields[field] = req.body[field];
+        }
+      });
 
       // Hash the password if it's provided
       if (password) {
