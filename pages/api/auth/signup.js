@@ -47,17 +47,30 @@ router.post("/", async (req, res) => {
     const hashedPassword = await bcrypt.hash(password, 10);
 
     const userId = uuidv4(); // Generate a unique user ID
+    const currentTimestamp = new Date();
 
     // Insert the user document with the generated user ID
     const result = await usersCollection.insertOne({
       userId: userId,
       firstName: firstName,
       lastName: lastName,
+      fullName: firstName + lastName,
       email: email,
       password: hashedPassword,
       phone: phone,
       isEmailVerified: false,
-      isPhoneVerified: false
+      isPhoneVerified: false,
+      username: null,
+      profilePic: null,
+      profileURL: null,
+      profileBio: null,
+      followersCount: null,
+      followingCount: null,
+      postsCount: null,
+      blogsCount: null,
+      platform: null,
+      lastUpdateTimestamp: currentTimestamp,
+      isVerified: null,
     });
 
     console.log("User inserted:", result.insertedId);

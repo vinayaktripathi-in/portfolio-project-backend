@@ -46,6 +46,19 @@ router.get("/", async (req, res) => {
         email: user.email,
         phone: user.phone,
         token: user.token,
+        isEmailVerified: user.isEmailVerified,
+        isPhoneVerified: user.isPhoneVerified,
+        username: user.username,
+        profilePic: user.profilePic,
+        profileURL: user.profileURL,
+        profileBio: user.profileBio,
+        followersCount: user.followersCount,
+        followingCount: user.followingCount,
+        postsCount: user.postsCount,
+        blogsCount: user.blogsCount,
+        platform: user.platform,
+        lastUpdateTimestamp: user.lastUpdateTimestamp,
+        isVerified: user.isVerified,
       };
       res.json(userData);
       client.close();

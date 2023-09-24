@@ -47,8 +47,9 @@ app.use("/like-blog", likeBlogRoute);
 app.use("/liked-by-blog", likedByBlogRoute);
 
 // Other API
-const userDataRoute = require("./pages/api/user-data");
+const userDataRoute = require("./pages/user-data");
 const contactRoute = require("./pages/api/contact");
+const editProfileRoute = require("./pages/api/profile/edit-profile");
 
 // Use route handlers
 // POST API
@@ -63,6 +64,9 @@ app.use("/create-password", createPasswordRoute);
 
 // GET API
 app.use("/user-data", userDataRoute);
+
+// PUT API
+app.use("/edit-profile", editProfileRoute);
 
 // Start the server
 const port = process.env.PORT || 4000;
