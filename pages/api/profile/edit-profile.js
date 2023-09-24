@@ -1,6 +1,6 @@
 const express = require("express");
 const bcrypt = require("bcrypt");
-const { MongoClient } = require("mongodb");
+const { MongoClient, ObjectId } = require("mongodb");
 const jwt = require("jsonwebtoken");
 const router = express.Router();
 const cloudinary = require("cloudinary").v2;
@@ -62,6 +62,8 @@ router.put("/:userId", upload.single("profilePic"), async (req, res) => {
         return res.status(401).json({ message: "Invalid token" });
       }
 
+      const userObjectId = new ObjectId(userId);
+
       if (decoded.userId !== userId) {
         client.close(); // Close the MongoDB connection if unauthorized
         return res
@@ -106,7 +108,28 @@ router.put("/:userId", upload.single("profilePic"), async (req, res) => {
         }
       }
 
-      // Update user data
+      // Initialize updateFields with the fields you want to update
+      const updateFields = {
+        firstName,
+        lastName,
+        fullName,
+        email,
+        phone,
+        isEmailVerified,
+        isPhoneVerified,
+        username,
+        profileURL,
+        profileBio,
+        followersCount,
+        followingCount,
+        postsCount,
+        blogsCount,
+        platform,
+        lastUpdateTimestamp,
+        isVerified,
+      };
+
+      // Iterate through the allowed fields and update them if present in req.body
       const allowedFields = [
         "firstName",
         "lastName",
@@ -116,7 +139,6 @@ router.put("/:userId", upload.single("profilePic"), async (req, res) => {
         "isEmailVerified",
         "isPhoneVerified",
         "username",
-        "profilePic",
         "profileURL",
         "profileBio",
         "followersCount",
@@ -128,9 +150,8 @@ router.put("/:userId", upload.single("profilePic"), async (req, res) => {
         "isVerified",
       ];
 
-      // Iterate through the allowed fields and update them if present in req.body
       allowedFields.forEach((field) => {
-        if (req.body.hasOwnProperty(field)) {
+        if (field in req.body) {
           updateFields[field] = req.body[field];
         }
       });
@@ -142,21 +163,21 @@ router.put("/:userId", upload.single("profilePic"), async (req, res) => {
       }
 
       const result = await usersCollection.updateOne(
-        { userId },
+        { _id: userObjectId }, // Use _id to find the user
         { $set: updateFields }
       );
+      console.log(userId);
 
       if (result.modifiedCount === 1) {
         res.status(200).json({ message: "User profile updated successfully" });
       } else {
         res.status(500).json({ message: "Failed to update user profile" });
       }
+      client.close(); // Ensure the MongoDB connection is closed after the operation
     });
   } catch (error) {
     console.error("Error connecting to MongoDB:", error);
     res.status(500).json({ message: "Internal server error" });
-  } finally {
-    client.close(); // Ensure the MongoDB connection is closed after the operation
   }
 });
 
