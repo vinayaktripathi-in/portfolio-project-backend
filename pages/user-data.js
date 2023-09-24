@@ -1,5 +1,5 @@
 const express = require("express");
-const { MongoClient, ObjectId } = require("mongodb");
+const { MongoClient} = require("mongodb");
 const jwt = require("jsonwebtoken");
 
 const router = express.Router();
@@ -30,9 +30,9 @@ router.get("/", async (req, res) => {
       }
 
       const userId = decoded.userId; // userId is a string
-      const objectIdUserId = new ObjectId(userId); // Convert it to ObjectId
+      // const objectIdUserId = new ObjectId(userId); // Convert it to ObjectId
 
-      const user = await usersCollection.findOne({ _id: objectIdUserId });
+      const user = await usersCollection.findOne({ userId: userId });
 
       if (!user) {
         return res.status(401).json({ message: "User not found" });
@@ -40,7 +40,7 @@ router.get("/", async (req, res) => {
 
       // Return the user data
       const userData = {
-        userId: user._id,
+        userId: user.userId,
         firstName: user.firstName,
         lastName: user.lastName,
         email: user.email,

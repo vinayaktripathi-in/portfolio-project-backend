@@ -1,5 +1,5 @@
 const express = require("express");
-const { MongoClient, ObjectId } = require("mongodb");
+const { MongoClient } = require("mongodb");
 const jwt = require("jsonwebtoken");
 const bodyParser = require("body-parser");
 
@@ -37,7 +37,7 @@ router.post("/:blogId/like", async (req, res) => {
       const userId = decoded.userId; // userId is a string
       const objectIdUserId = new ObjectId(userId); // Convert it to ObjectId
 
-      const user = await usersCollection.findOne({ _id: objectIdUserId });
+      const user = await usersCollection.findOne({ _id: userId });
 
       if (!user) {
         return res.status(401).json({ message: "User not found" });

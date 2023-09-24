@@ -44,9 +44,9 @@ router.post("/", upload.single("coverImage"), async (req, res) => {
       }
 
       const userId = decoded.userId;
-      const objectIdUserId = new ObjectId(userId);
+      // const objectIdUserId = new ObjectId(userId);
 
-      const user = await usersCollection.findOne({ _id: objectIdUserId });
+      const user = await usersCollection.findOne({ userId: userId });
 
       if (!user) {
         res.status(404).json({ message: "User not found" });
