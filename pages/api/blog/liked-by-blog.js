@@ -55,11 +55,12 @@ router.get("/:blogId", authenticateJWT, async (req, res) => {
     }
 
     // Fetch the details of users who have liked the blog
-    const userIds = blog.likes.map((userId) => (userId));
+    const userIds = blog.likes.map((userId) => userId);
     const likedUsers = await usersCollection
-      .find({ _id: { $in: userIds } })
+      .find({ userId: { $in: userIds } })
       .toArray();
 
+    console.log(userIds);
     res.status(200).json(likedUsers);
   } catch (error) {
     console.error("Error fetching liked users:", error);

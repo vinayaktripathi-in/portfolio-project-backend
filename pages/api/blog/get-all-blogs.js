@@ -37,7 +37,7 @@ router.get("/", async (req, res) => {
       const userId = decoded.userId; // userId is a string
       // const objectIdUserId = new ObjectId(userId); // Convert it to ObjectId
 
-      const user = await usersCollection.findOne({ _id: userId });
+      const user = await usersCollection.findOne({ userId : userId });
 
       if (!user) {
         return res.status(401).json({ message: "User not found" });
