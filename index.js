@@ -38,6 +38,8 @@ const deleteBlogRoute = require("./pages/api/blog/delete-blog");
 const updateBlogRoute = require("./pages/api/blog/update-blog");
 const likeBlogRoute = require("./pages/api/blog/like-blog");
 const likedByBlogRoute = require("./pages/api/blog/liked-by-blog");
+const commentBlogRoute = require("./pages/api/blog/comment-blog");
+const getCommentsBlogRoute = require("./pages/api/blog/get-comments-blog");
 app.use("/create-blog", createBlogRoute);
 app.use("/get-all-blogs", getAllBlogRoute);
 app.use("/get-blog", getBlogRoute);
@@ -45,6 +47,8 @@ app.use("/delete-blog", deleteBlogRoute);
 app.use("/update-blog", updateBlogRoute);
 app.use("/like-blog", likeBlogRoute);
 app.use("/liked-by-blog", likedByBlogRoute);
+app.use("/comment-blog", commentBlogRoute);
+app.use("/get-comments-blog", getCommentsBlogRoute);
 
 // Other API
 const userDataRoute = require("./pages/user-data");
