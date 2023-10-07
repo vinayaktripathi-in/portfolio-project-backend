@@ -13,7 +13,7 @@ const client = new MongoClient(uri, {
 
 router.use(bodyParser.json());
 
-router.post("/:blogId/like", async (req, res) => {
+router.post("/:blogId", async (req, res) => {
   const { blogId } = req.params;
   const token = req.header("x-auth-token");
 
