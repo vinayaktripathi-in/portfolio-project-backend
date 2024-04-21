@@ -9,7 +9,7 @@ app.use(
     origin: [
       "http://localhost:3000",
       "https://portfolio-project-frontend-vinayaktripathi.vercel.app",
-      "https://www.vinayaktripathi.in"
+      "https://www.vinayaktripathi.in",
     ],
     methods: "GET, POST, PUT, DELETE", // Adjust the allowed HTTP methods
     credentials: true, // Allow sending cookies and other credentials

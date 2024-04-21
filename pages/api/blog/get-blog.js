@@ -13,15 +13,15 @@ const client = new MongoClient(uri, {
 router.use(bodyParser.json());
 
 router.get("/:blogId", async (req, res) => {
-  const token = req.header("x-auth-token");
+  // const token = req.header("x-auth-token");
 
-  if (!token) {
-    return res
-      .status(401)
-      .json({ message: "Access denied. No token provided." });
-  }
+  // if (!token) {
+  //   return res
+  //     .status(401)
+  //     .json({ message: "Access denied. No token provided." });
+  // }
   
-  const { blogId } = req.params;
+  // const { blogId } = req.params;
 
   try {
     await client.connect();

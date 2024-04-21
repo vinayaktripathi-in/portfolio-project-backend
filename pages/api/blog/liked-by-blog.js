@@ -1,6 +1,6 @@
 const express = require("express");
 const { MongoClient } = require("mongodb");
-const jwt = require("jsonwebtoken");
+// const jwt = require("jsonwebtoken");
 const bodyParser = require("body-parser");
 
 const router = express.Router();
@@ -14,26 +14,27 @@ const client = new MongoClient(uri, {
 router.use(bodyParser.json());
 
 // Middleware for JWT authentication
-function authenticateJWT(req, res, next) {
-  const token = req.header("x-auth-token");
+// function authenticateJWT(req, res, next) {
+//   const token = req.header("x-auth-token");
 
-  if (!token) {
-    return res
-      .status(401)
-      .json({ message: "Access denied. No token provided." });
-  }
+//   if (!token) {
+//     return res
+//       .status(401)
+//       .json({ message: "Access denied. No token provided." });
+//   }
 
-  jwt.verify(token, "XXR", (err, decoded) => {
-    if (err) {
-      return res.status(401).json({ message: "Invalid token" });
-    }
+//   jwt.verify(token, "XXR", (err, decoded) => {
+//     if (err) {
+//       return res.status(401).json({ message: "Invalid token" });
+//     }
 
-    req.user = decoded; // Store user information in the request object
-    next();
-  });
-}
+//     req.user = decoded; // Store user information in the request object
+//     next();
+//   });
+// }
 
-router.get("/:blogId", authenticateJWT, async (req, res) => {
+// router.get("/:blogId", authenticateJWT, async (req, res) => {
+router.get("/:blogId", async (req, res) => {
   const { blogId } = req.params;
 
   try {
